@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Searchbar } from '../Searchbar/Searchbar';
 import { ImageGallery } from '../ImageGallery/ImageGallery';
@@ -10,70 +10,69 @@ import { fetchImages } from 'components/Api';
 import { Layout } from './App.styled'
 
 
-export class App extends Component {
-  state = {
-    query: '',
-    images: [],
-    page: 1,
-    loading: false,
-    error: false,
-  };
+export const App = () => {
+ 
+  
+  const [query, setQuery] = useState('');
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  componentDidMount() {
-  console.log('I mounted!')
-}
-
-  componentDidUpdate(prevProps, prevState) {
-    console.log('I updated!')
-    if (
-      prevState.query !== this.state.query ||
-      prevState.page !== this.state.page
-    ) {
-      this.searchImages();
-    }
-  }
-
-  searchImages = async () => {
-    const { query, page } = this.state;
+ 
+  useEffect(() => {
+    const searchImages = async () => {
     try {
-      this.setState({ loading: true, error: false });
+
+      setLoading(true);
+      setError(false);
+
       const response = await fetchImages(query, page);
-      this.setState((prevState) => ({
-        images: [...prevState.images, ...response.hits],
-        loading: false,
-      }));
+      setImages((prevState) => [...prevState, ...response.hits]);
+      setLoading(false);
+
     } catch (error) {
-      this.setState({ error: true, loading: false });
+      setLoading(false);
+      setError(true);
       console.error('Something went wrong:', error);
     }
-  };
-
-  handleLoadMore = () => {
-    this.setState((prevState) => ({ page: prevState.page + 1 }));
-  };
-
-  handleSearch = (query) => {
-    this.setState({ query: query, page: 1, images: [] });
-  };
-
-
+    };
+    searchImages();
+    if (query !== '' || page !== 1) {
+         searchImages();
+       }
+  }, [query, page]);
   
 
 
 
-  render() {
-    const { loading, error, images } = this.state;
+
+ const  handleLoadMore = () => {
+   setPage((prevPage) => prevPage + 1);
+  };
+
+ const  handleSearch = (newQuery) => {
+   
+   setQuery(newQuery);
+   setPage(1);
+   setImages([])
+  };
+
+
+  
     const showLoadMoreButton = images.length > 0;
 
     return (
       <Layout>
-        <Searchbar onSubmit={this.handleSearch} />
-        <ImageGallery images={images} openModal={this.openModal} />
+        <Searchbar onSubmit={handleSearch} />
+        <ImageGallery images={images} />
         <Loader loading={loading} error={error} />
-        {showLoadMoreButton && <Button onClick={this.handleLoadMore} />}
+        {showLoadMoreButton && <Button onClick={handleLoadMore} />}
         </Layout>
     );
-  }
+ 
 }
 
 export default App;
+
+
