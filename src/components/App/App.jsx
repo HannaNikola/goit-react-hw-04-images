@@ -37,12 +37,13 @@ export const App = () => {
       console.error('Something went wrong:', error);
     }
     };
-    searchImages();
+
     if (query !== '' || page !== 1) {
          searchImages();
        }
   }, [query, page]);
   
+
 
 
 
