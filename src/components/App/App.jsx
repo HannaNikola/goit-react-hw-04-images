@@ -21,6 +21,9 @@ export const App = () => {
 
  
   useEffect(() => {
+    if (query === '') {
+      return;
+    }
     const searchImages = async () => {
     try {
 
@@ -38,9 +41,8 @@ export const App = () => {
     }
     };
 
-    if (query !== '' || page !== 1) {
          searchImages();
-       }
+     
   }, [query, page]);
   
 
@@ -50,6 +52,7 @@ export const App = () => {
 
  const  handleLoadMore = () => {
    setPage((prevPage) => prevPage + 1);
+
   };
 
  const  handleSearch = (newQuery) => {
