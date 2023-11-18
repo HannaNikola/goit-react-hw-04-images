@@ -45,7 +45,9 @@ export const ImageGalleryItem = ({ image }) => {
             if (event.code === 'Escape' && isModalOpen) {
                 closeModal();
             }
+
         }
+        
         window.addEventListener('keydown', hendalKeyDown);
         return () => {
             window.addEventListener('keydown', hendalKeyDown);

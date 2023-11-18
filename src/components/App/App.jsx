@@ -25,6 +25,7 @@ export const App = () => {
       return;
     }
     const searchImages = async () => {
+      
     try {
 
       setLoading(true);
@@ -38,7 +39,9 @@ export const App = () => {
       setLoading(false);
       setError(true);
       console.error('Something went wrong:', error);
-    }
+    } 
+      
+    
     };
 
          searchImages();
